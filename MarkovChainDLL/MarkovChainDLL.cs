@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEngine;
 
 namespace MarkovChainDLL
 {
@@ -10,7 +9,7 @@ namespace MarkovChainDLL
         private double diff;
 
         // Validating each row for the probabilities to add up to 1 
-        private bool ValidateProbabilities(int size, double[][] p)
+        public bool ValidateProbabilities(int size, double[][] p)
         {
             double total = 0;
             for (int i = 0; i < size; i++)
@@ -21,7 +20,7 @@ namespace MarkovChainDLL
                 }
             }
             diff = Math.Abs(total - size);
-            if (diff < 0.001)
+            if (diff < 0.0000001)
                 return true;
             else
                 return false;
@@ -30,7 +29,7 @@ namespace MarkovChainDLL
         // Calculate a random double value
         private double CalculateRandom()
         {
-            System.Random rand = new System.Random();
+            Random rand = new Random();
             return rand.NextDouble();
         }
 
@@ -51,8 +50,8 @@ namespace MarkovChainDLL
         // Calculate the new weather state
         public int CalculateWeatherState(int size, int[][] t, double[][] p)
         {
-            //if (ValidateProbabilities(size, p))
-            //    throw new System.ArgumentException("Something went wrong with validating the probablities", "" + diff);
+            if (ValidateProbabilities(size, p))
+                throw new ArgumentException("Something went wrong with validating the probabilities", "" + diff.ToString());
 
             transition = CalculateTransition(size, t, p, currentState);
             for (int i = 0; i < size; i++)
