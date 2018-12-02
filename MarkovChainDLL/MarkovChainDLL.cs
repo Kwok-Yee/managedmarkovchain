@@ -6,10 +6,11 @@ namespace MarkovChainDLL
     {
         private int transition = 0;
         private int currentState = 0;
-        private double diff;
+        private double diff = 0;
+        private bool validated = false;
 
         // Validating each row for the probabilities to add up to 1 
-        public bool ValidateProbabilities(int size, double[][] p)
+        private void ValidateProbabilities(int size, double[][] p)
         {
             double total = 0;
             for (int i = 0; i < size; i++)
@@ -21,9 +22,7 @@ namespace MarkovChainDLL
             }
             diff = Math.Abs(total - size);
             if (diff < 0.0000001)
-                return true;
-            else
-                return false;
+                validated = true;
         }
 
         // Calculate a random double value
@@ -50,8 +49,8 @@ namespace MarkovChainDLL
         // Calculate the new weather state
         public int CalculateWeatherState(int size, int[][] t, double[][] p)
         {
-            if (ValidateProbabilities(size, p))
-                throw new ArgumentException("Something went wrong with validating the probabilities", "" + diff.ToString());
+            if (!validated)
+                ValidateProbabilities(size, p);
 
             transition = CalculateTransition(size, t, p, currentState);
             for (int i = 0; i < size; i++)
